@@ -1,0 +1,55 @@
+.container-domicilios{
+   background-color: rgb(236, 231, 231);
+   border-radius: 5px;
+   margin-top: 1%;
+   margin-left: auto;
+   margin-right: auto;
+}
+
+.form-group{
+    width: 500px;
+    margin-right: auto;
+    margin-left: auto;
+}
+.form-group:nth-child(odd), .form-group:nth-child(0n+6), .form-group:nth-child(0n+7),.form-group:nth-child(0n+8){
+    margin-left: 40px;
+    margin-right: 5px;
+}
+.form-group:nth-child(0n+6),.form-group:nth-child(0n+9){
+    margin-left: 0px !important;
+}
+
+.form-group-not{
+    margin-left: 0px !important;
+}
+.button-calculate{
+    margin-left: auto;
+    margin-right: auto;
+}
+.container-fomulario{
+}
+.button-add{
+    padding: 5px;
+    height: 0%;
+}
+.text-area{
+    resize: none;
+    overflow: none;
+}
+hr{
+    width: 90%;
+}
+@media screen and (max-width: 720px){
+    .container-fomulario{
+        display: grid;
+        margin-left: 5%;
+        grid-template-columns: repeat(1,1fr);
+    }
+    .form-group{
+        width: 400px;
+        /* margin-left: auto;
+        margin-right: auto; */
+        margin-left: 0 !important;
+        margin-right: 0 !important;
+    }
+}
