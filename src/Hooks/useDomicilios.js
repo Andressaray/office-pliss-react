@@ -1,28 +1,27 @@
-const URL = 'http://localhost:8080/office-pliss-react/src/backend/controller.php'
-const saveDomicilio = (newDomicilio) => {
-    console.log('newDomicilio', newDomicilio);
-    fetch(URL, {
-        method: 'POST',
-        mode: 'cors',
-        // headers: {
-        //     'Content-Type': 'application/json'
-        // },
-        data: JSON.stringify(newDomicilio),
-    }).then((response) => {
-        console.log('response', response);
-    }).catch((e) => {
-        console.log('e', e);
-    })
-    // const response = await axios.post(URL, newDomicilio)
-    // const data = await response
-    // console.log('data', data);
+import axios from 'axios'
+const URL = 'http://localhost:8080/office-pliss-react/build/controller.php'
+
+const saveDomicilio = async (newDomicilio) => {
+    const response  = await axios.post(URL, JSON.stringify(newDomicilio))
+    const data      = await response
+    console.log('data', data);
 }
 
-const useGetDomicilios = async () => {
+const getDomicilios = async () => {
+    const response  = await axios.get(URL)
+    const { data }  = await response
+    return data
+}
 
+const getDomiciliosFecha = async (fechas) => {
+    const response = await axios.post(URL, fechas)
+    console.log('response', response);
+    const { data } = await response
+    return data
 }
 
 export {
     saveDomicilio,
-    useGetDomicilios
+    getDomicilios,
+    getDomiciliosFecha
 }

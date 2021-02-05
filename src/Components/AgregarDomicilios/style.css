@@ -11,12 +11,16 @@
     margin-right: auto;
     margin-left: auto;
 }
-.form-group:nth-child(odd), .form-group:nth-child(0n+6), .form-group:nth-child(0n+7),.form-group:nth-child(0n+8){
+.form-group:nth-child(odd){
     margin-left: 40px;
     margin-right: 5px;
 }
-.form-group:nth-child(0n+6),.form-group:nth-child(0n+9){
+.form-group:nth-child(0n+6){
     margin-left: 0px !important;
+}
+.form-group:nth-child(0n+7){
+    margin-left: auto !important;
+    margin-right: auto !important;
 }
 
 .form-group-not{
@@ -25,8 +29,6 @@
 .button-calculate{
     margin-left: auto;
     margin-right: auto;
-}
-.container-fomulario{
 }
 .button-add{
     padding: 5px;
@@ -47,8 +49,6 @@ hr{
     }
     .form-group{
         width: 400px;
-        /* margin-left: auto;
-        margin-right: auto; */
         margin-left: 0 !important;
         margin-right: 0 !important;
     }

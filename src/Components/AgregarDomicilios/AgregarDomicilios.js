@@ -1,9 +1,9 @@
-import React, { useState } from "react";
-import { Form, Button }    from "react-bootstrap";
-import SweetAlert         from "sweetalert2";
+import React, { useState }  from 'react';
+import { Form, Button }     from 'react-bootstrap';
+import SweetAlert           from 'sweetalert2';
 
 import { verificaAgregarDomicilio } from '../../controller/controladorGuardarDomicilio'
-import "./style.css";
+import './style.css';
 
 export default function AgregarDomicilios() {
   const [fechaDomicilio, setFechaDomicilio]     = useState([]);
@@ -17,8 +17,8 @@ export default function AgregarDomicilios() {
   const calcularRecargos = () => {
     if (fechaInicio.length === 0 || fechaFin.length === 0) {
       SweetAlert.fire({
-        icon: "info",
-        text: "Tienes que ingresar la hora de inicio y la hora fin",
+        icon: 'info',
+        text: 'Tienes que ingresar la hora de inicio y la hora fin',
       });
       return false;
     } else {
@@ -27,8 +27,8 @@ export default function AgregarDomicilios() {
       let recargosHorasPrev = 0;
       let totalRecargos     = 0;
       const valorRecargo    = (valorBase * 0.75);
-      let fechaI            = fechaInicio.split(":").map((inicio) => parseInt(inicio));
-      let fechaF            = fechaFin.split(":").map((fin) => parseInt(fin));
+      let fechaI            = fechaInicio.split(':').map((inicio) => parseInt(inicio));
+      let fechaF            = fechaFin.split(':').map((fin) => parseInt(fin));
       if (fechaF[1] >= fechaI[1]) {
         recargosHorasPrev = parseInt(((fechaF[0] - fechaI[0]) * 2));
         recargosHoras     = recargosHorasPrev === 0 ? 0 : recargosHorasPrev - 1; 
@@ -53,6 +53,7 @@ export default function AgregarDomicilios() {
       fechaInicio,
       fechaFin,
       valorBase,
+      valorTotal,
       cantidadRecargos,
       descripcionDomicilio
     };
@@ -65,78 +66,63 @@ export default function AgregarDomicilios() {
     }
   };
   return (
-    <div className="container-domicilios mb-3">
-      <h3 className="text-center">Crear Domicilio</h3>
+    <div className='container-domicilios mb-3'>
+      <h3 className='text-center'>Crear Domicilio</h3>
       <hr />
-      <Form className="container-fomulario">
-        <Form.Group
-          controlId="exampleForm.ControlSelect1"
-          className="d-inline-block"
-        >
-          <Form.Label>
-            <i>Empresas</i>
-          </Form.Label>
-          <Form.Control as="select" required>
-            <option>1</option>
-            <option>2</option>
-            <option>3</option>
-            <option>4</option>
-            <option>5</option>
-          </Form.Control>
-        </Form.Group>
-        <Form.Group controlId="formBasicEmail" className="d-inline-block">
+      <Form className='container-fomulario'>
+        <Form.Group controlId='formBasicEmail' className='d-inline-block'>
           <Form.Label>
             <i>Fecha del Domicilio</i>
           </Form.Label>
           <Form.Control
-            type="date"
+            type='date'
             required
             onChange={(val) => setFechaDomicilio(val.target.value)}
           />
         </Form.Group>
         <Form.Group
-          controlId="formBasicPassword"
-          className="d-inline-block"
+          controlId='formBasicPassword'
+          className='d-inline-block'
         >
           <Form.Label>
             <i>Hora Inicio</i>
           </Form.Label>
           <Form.Control
             required
-            type="time"
+            type='time'
             onChange={(val) => {
               setFechaInicio(val.target.value);
             }}
           />
         </Form.Group>
-        <Form.Group controlId="formBasicPassword" className="d-inline-block">
+        <Form.Group controlId='formBasicPassword' className='d-inline-block'>
           <Form.Label>
             <i>Hora Fin</i>
           </Form.Label>
           <Form.Control
             required
-            type="time"
+            type='time'
             onChange={(value) => {
               setFechaFin(value.target.value);
             }}
           />
         </Form.Group>
         {fechaInicio > fechaFin && fechaFin !== 0 && (
-            <div className="text-center mb-3">
-              <span className="alert alert-danger">
+            <div className='text-center mb-3'>
+              <span className='alert alert-danger'>
               La fecha de inicio no puede ser mayor a la de fin
               </span>
             </div>
           )}
-        <Form.Group controlId="formBasicCheckbox" className="d-inline-block">
+        <Form.Group controlId='formBasicCheckbox' className='d-inline-block'>
           <Form.Label>
             <i>Valor base del Domicilio</i>
           </Form.Label>
           <Form.Control
             required
-            type="text"
-            placeholder="Valor base del domicilio"
-            pattern="[0-9]*"
+            type='text'
+            placeholder='Valor base del domicilio'
+            pattern='[0-9]*'
             onKeyPress={(event) => {
               if (!/[0-9]/.test(event.key)) {
                 SweetAlert.fire({
@@ -149,53 +135,53 @@ export default function AgregarDomicilios() {
             onChange={(val) => setValorBase(parseInt(val.target.value))}
           />
         </Form.Group>
-        <Form.Group controlId="formBasicCheckbox" className="d-inline-block">
+        <Form.Group controlId='formBasicCheckbox' className='d-inline-block'>
           <Form.Label>
             <i>Valor total del Domicilio</i>
           </Form.Label>
           <Form.Control
-            type="text"
-            placeholder="Valor total de Domicilio"
+            type='text'
+            placeholder='Valor total de Domicilio'
             readOnly
             value={valorTotal}
           />
         </Form.Group>
-        <Form.Group controlId="formBasicCheckbox" className="d-inline-block">
+        <Form.Group controlId='formBasicCheckbox' className='d-inline-block'>
           <Form.Label>
             <i>Cantidad de Recargos</i>
           </Form.Label>
           <Form.Control
-            type="text"
-            className="form-group"
-            placeholder="Cantidad de Recargos"
+            type='text'
+            className='form-group'
+            placeholder='Cantidad de Recargos'
             value={cantidadRecargos}
             readOnly
           />
         </Form.Group>
-        <div className="text-center">
+        <div className='text-center'>
             <button
-              type="button"
-              className="btn btn-dark"
+              type='button'
+              className='btn btn-dark'
               onClick={() => calcularRecargos()}
             >
               Calcular Valor del Domicilio
             </button>
           </div>
         <br />
-        <Form.Group controlId="exampleForm.ControlTextarea1" className="mr-auto">
+        <Form.Group controlId='exampleForm.ControlTextarea1' className='col-md-6 pl-0'>
           <Form.Control
-            as="textarea"
-            placeholder="Descripción del dominicilio"
+            as='textarea'
+            placeholder='Descripción del dominicilio'
             rows={3}
-            className="text-area"
+            className='text-area'
             onChange={(val) => setDescripcionDomicilio(val.target.value)}
           />
         </Form.Group>
-        <div className="text-center">
+        <div className='text-center'>
           <Button
-            variant="info"
-            type="button"
-            className="button mb-2"
+            variant='info'
+            type='button'
+            className='button mb-2'
             onClick={() => handleSubmit()}
           >
             Crear Domicilio
