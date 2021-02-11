@@ -42,23 +42,34 @@ export default function AgregarDomicilios() {
       if (fechaF[1] >= fechaI[1]) {
         recargosHorasPrev   = parseInt(((fechaF[0] - fechaI[0]) * 2));
         recargosHoras       = recargosHorasPrev === 0 ? 0 : recargosHorasPrev - 1;
+        console.log('recargosHoras', recargosHoras);
         recargosMinutosPrev = fechaF[1]-fechaI[1];
-        if(fechaF[1] !== fechaI[1]){
-          recargosMinutosAft  = recargosHorasPrev > 30 ? 2 : 1;
-        }
-        recargosMinutos     = fechaF[1] !== fechaI[1] ? parseInt((fechaF[1]-fechaI[1]) / 30): 0;
-        totalRecargos       = recargosHoras + recargosMinutos + recargosMinutosAft;
+        recargosMinutos     = fechaF[1] > fechaI[1] ? 1 : 0;
+        // recargosMinutos     = fechaF[1] !== fechaI[1] ? parseInt((fechaF[1]-fechaI[1]) / 30): 1;
+        console.log('recargosMinutos', recargosMinutos);
+        totalRecargos       = recargosHoras + recargosMinutos;
         setCantidadRecargos(totalRecargos);
         setValorTotal(valorBase + (totalRecargos * valorRecargo));
       }
       else{
         recargosHorasPrev   = parseInt((fechaF[0] - fechaI[0]) * 2);
         recargosHoras       = recargosHorasPrev === 2 ? -1 : recargosHorasPrev;
-        recargosMinutosPrev = ((60 - fechaI[1]) + fechaF[1])
-        recargosMinutos     = recargosMinutosPrev/30 === 1 ? 1 : recargosMinutosPrev /30 > 1 ? 2 : 1;
-        totalRecargos       = (recargosHoras + recargosMinutos);
-        setCantidadRecargos(totalRecargos);
-        setValorTotal(valorBase + (cantidadRecargos * valorRecargo));
+        if(recargosHoras !== -1){
+          let recargosHorasAft  = recargosHorasPrev - 2;
+          recargosMinutosPrev   = ((60-fechaI[1])+ fechaF[1]);
+          console.log('recargosMinutosPrev', recargosMinutosPrev);
+          console.log('recargosHorasPrev/30', recargosMinutosPrev/30);
+          recargosMinutosAft    =  recargosMinutosPrev/30 <= 1 ? 1 : 2;
+          totalRecargos         = (recargosHorasAft + recargosMinutosAft)-1;
+          setCantidadRecargos(totalRecargos);
+          setValorTotal(valorBase + (totalRecargos * valorRecargo));
+        }else{
+          recargosMinutosPrev = ((60-fechaI[1]) + fechaF[1])
+          recargosMinutos     = recargosMinutosPrev/30 === 1 ? 1 : recargosMinutosPrev /30 > 1 ? 2 : 1;
+          totalRecargos       = (recargosHoras + recargosMinutos);
+          setCantidadRecargos(totalRecargos);
+          setValorTotal(valorBase + (totalRecargos * valorRecargo));
+        }
       }
     }
   };
