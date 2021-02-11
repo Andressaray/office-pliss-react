@@ -4,7 +4,6 @@ const URL = 'http://localhost:8080/office-pliss-react/build/controller.php'
 const saveDomicilio = async (newDomicilio) => {
     const response  = await axios.post(URL, JSON.stringify(newDomicilio))
     const data      = await response
-    console.log('data', data);
 }
 
 const getDomicilios = async () => {
@@ -13,9 +12,8 @@ const getDomicilios = async () => {
     return data
 }
 
-const getDomiciliosFecha = async (fechas) => {
-    const response = await axios.post(URL, fechas)
-    console.log('response', response);
+const getDomiciliosFecha = async (argsDomicilios) => {
+    const response = await axios.post(URL, argsDomicilios)
     const { data } = await response
     return data
 }

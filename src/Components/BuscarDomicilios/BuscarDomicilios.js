@@ -1,11 +1,11 @@
 import React, { useEffect, useState } from 'react';
-import { Table, Button, Form } from 'react-bootstrap';
-// import  { modules as  ExportarExcel}            from 'react-export-excel';
-import SweeAlert                                from 'sweetalert2'
+import { Table, Button, Form }        from 'react-bootstrap';
+import SweeAlert                      from 'sweetalert2'
 
 import { getDomicilios, getDomiciliosFecha }  from '../../Hooks/useDomicilios';
 import ListDomicilios                         from '../ListDomicilios/ListDomicilios';
-import { exportExcel } from '../../Hooks/exportaExcel'
+import { exportExcel }                        from '../../Hooks/exportaExcel'
+import getEmpresas                            from '../../Hooks/useEmpresas';
 
 import iconExcel from '../../images/excel.png'
 import './style.css'
@@ -15,7 +15,10 @@ export default function BuscarDomicilios() {
   const [domicilios, setDomicilios] = useState([]);
   const [fechaI, setFechaI]         = useState('');
   const [fechaF, setFechaF]         = useState('');
+  const [empresas, setEmpresas]     = useState(getEmpresas())
   const [domiciliosCargados, setDomiciliosCargados] = useState([])
+  const [empresaSelected, isEmpresaSelected]        = useState('');
+  const [otraEmpresa, setOtraEmpresa]               = useState('');
   useEffect(() => {
     getDomicilios().then((data) => {
       setDomicilios(data);
@@ -23,7 +26,9 @@ export default function BuscarDomicilios() {
   }, []);
 
   const handleSubmit = async () => {
-    const fechas = {
+    const argsDomicilios = {
+      otraEmpresa,
+      empresaSelected,
       fechaI,
       fechaF
     }
@@ -38,11 +43,40 @@ export default function BuscarDomicilios() {
         confirmButtonText: 'Si quiero'
       }).then((result) => {
         if (result.isConfirmed) {
-          getDomiciliosFecha(fechas)
+          getDomiciliosFecha(argsDomicilios)
             .then((data) => {
               setDomiciliosCargados(data);
-              exportExcel(data);
+              if(data.status === 'info'){
+                SweeAlert.fire({
+                  icon: 'info',
+                  title: 'Upss ...',
+                  text: data.message
+                })
+                return 
+              }else{
+                exportExcel(data);
+                SweeAlert.fire(
+                  'Excelente',
+                  'El reporte se esta generando, espera unos minutos o segundos!',
+                  'success'
+                );
+              }
             })
+        }
+      })
+    }else{
+      getDomiciliosFecha(argsDomicilios)
+      .then((data) => {
+        setDomiciliosCargados(data);
+        if(data.status === 'info'){
+          SweeAlert.fire({
+            icon: 'info',
+            title: 'Upss ...',
+            text: data.message
+          })
+          return 
+        }else{
+          exportExcel(data);
           SweeAlert.fire(
             'Excelente',
             'El reporte se esta generando, espera unos minutos o segundos!',
@@ -50,24 +84,8 @@ export default function BuscarDomicilios() {
           );
         }
       })
-    }else{
-      SweeAlert.fire({
-        icon: 'success',
-        title: 'Reporte generado con exito',
-        text: 'El reporte puede tardar unos minutos'
-      })
-      getDomiciliosFecha(fechas)
-      .then((data) => {
-        setDomiciliosCargados(data);
-        exportExcel(data);
-      })
       
     }
-  }
-
-  const handleExcel = (domin) => {
-    console.log('domin', domin);
-    
   }
 
   return (
@@ -99,6 +117,37 @@ export default function BuscarDomicilios() {
               }}
             />
           </Form.Group>
+          {
+            empresas.length && (
+              <Form.Group className='d-inline-block'>
+                <Form.Label>
+                  <i>Selecciona Empresa</i>
+                </Form.Label>
+                <Form.Control as='select' onChange={(text) => isEmpresaSelected(text.target.value) } custom>
+                  <option value='Ninguna'>Ninguna</option>
+                    {
+                      empresas.map(({ id, name }) => {
+                        return <option key={id} value={name}>{ name }</option>
+                      })
+                    }
+                </Form.Control>
+              </Form.Group>
+            )
+          }
+          {
+            empresaSelected === 'Otro' && (
+              <Form.Group className='d-inline-block'>
+                <Form.Label>
+                  <i>Ingresa nombre de la empresa o del cliente</i>
+                </Form.Label>
+                <Form.Control 
+                  type='text' 
+                  placeholder='Nombre del cliente o empresa'  
+                  onChange={(text) => setOtraEmpresa(text.target.value)}    
+                />
+              </Form.Group>
+            )
+          }
           <div className='button-excel'>
             <Button variant='success' className='mb-1 mr-auto' onClick={() => handleSubmit()}>
               Imprimir reporte
@@ -110,7 +159,8 @@ export default function BuscarDomicilios() {
       <Table responsive='xl' striped hover variant='dark' className='text-center'>
         <thead>
           <tr>
-            <th>Fecha Domicilio </th>
+            <th>Empresa</th>
+            <th>Fecha Domicilio</th>
             <th>Hora Final</th>
             <th>Hora Inicio</th>
             <th>Recargos</th>
@@ -122,10 +172,11 @@ export default function BuscarDomicilios() {
         <tbody>
           {
             domicilios.length ? (
-              domicilios.map(({id, fecha_domicilio, hora_i, hora_f, recargos, valor_base, valor_total, descripcion}) => {
+              domicilios.map(({id, empresa, fecha_domicilio, hora_i, hora_f, recargos, valor_base, valor_total, descripcion}) => {
                   return (
                     <ListDomicilios 
                       key={id}
+                      empresa={empresa}
                       fecha_domicilio={fecha_domicilio}
                       hora_f={hora_f}
                       hora_i={hora_i}
