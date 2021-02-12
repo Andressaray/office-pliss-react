@@ -42,10 +42,12 @@ export default function AgregarDomicilios() {
       if (fechaF[1] >= fechaI[1]) {
         recargosHorasPrev   = parseInt(((fechaF[0] - fechaI[0]) * 2));
         recargosHoras       = recargosHorasPrev === 0 ? 0 : recargosHorasPrev - 1;
-        console.log('recargosHoras', recargosHoras);
         recargosMinutosPrev = fechaF[1]-fechaI[1];
-        recargosMinutos     = fechaF[1] > fechaI[1] ? 1 : 0;
-        // recargosMinutos     = fechaF[1] !== fechaI[1] ? parseInt((fechaF[1]-fechaI[1]) / 30): 1;
+        if(fechaF[0] === fechaI[0]){
+          recargosMinutos     = recargosMinutosPrev <= 30 ? 0 :1;  
+        }
+        else {recargosMinutos     = fechaF[1] > fechaI[1] ? 1 : 0;}
+        console.log('recargosMinutosPrev', recargosMinutosPrev)
         console.log('recargosMinutos', recargosMinutos);
         totalRecargos       = recargosHoras + recargosMinutos;
         setCantidadRecargos(totalRecargos);
